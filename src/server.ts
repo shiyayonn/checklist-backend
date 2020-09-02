@@ -1,14 +1,30 @@
 import express from 'express';
+import pool from './db/pool'
+import 'dotenv/config';
+import { checkListRouter } from './routes/checklist';
+
 
 const start = () => {
-    let port = 5000;
+
     const app = express();
-    app.get('/', (req, res) => {
-        res.send("Hello world!");
+    app.use(express.json());
+
+    app.listen(process.env.PORT, () => {
+        console.log(`LISTENING ON PORT ${process.env.PORT} !`)
     })
-    app.listen(port, () => {
-        console.log(`LISTENING ON PORT ${port}!`)
-    })
+
+    //Test connection for the database
+    pool.connect((err) => {
+        if (err)
+            console.log("There was an error connecting to the database")
+        else
+            console.log("Database connected")
+
+    });
+
+    //Connecc routers to app
+    app.use('/checklist', checkListRouter);
+    
 }
- 
+
 start();
