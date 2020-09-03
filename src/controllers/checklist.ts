@@ -6,7 +6,7 @@ import { createUniqueId } from '../helpers/id.generate';
 
 // Function to get All Checklist
 const getAllCheckList = async (req, res) => {
-
+    console.log("I GOT HERE")
     try {
 
         let data = await pool.query("SELECT * FROM CheckList")
@@ -25,8 +25,8 @@ const getAllCheckList = async (req, res) => {
 const getCheckListById = async (req, res) => {
 
     try {
-
-        let data = await pool.query(`SELECT * FROM CheckList where id = ${req.params.id}`)
+        let textpath = req.params.textpath;
+        let data = await pool.query('SELECT id, checklistname FROM CheckList where textpath = $1', [req.params.textpath])
 
         if (data.rows.length) {
 
@@ -55,10 +55,11 @@ const addCheckList = async (req, res) => {
         if (req.body.checklistname && req.body.checklistname.length <= 20) {
 
             let uniqueId = createUniqueId(7);
-            await pool.query(`INSERT INTO CheckList (textPath,checkListName) VALUES ('${uniqueId}','${req.body.checklistname}')`)
-            res.status(status.created)
+            let checkListName = req.body.checklistname;
+            await pool.query("INSERT INTO CheckList (textPath,checkListName) VALUES ($1,$2)", [uniqueId, checkListName])
+
             let message = { message: "Record added" };
-            res.json(Object.assign({}, successMessage, message));
+            res.status(status.created).json(Object.assign({}, successMessage, message));
 
         }
         else if (req.body.checklistname && req.body.checklistname.length >= 20) {
@@ -81,5 +82,7 @@ const addCheckList = async (req, res) => {
 
     }
 }
+
+
 
 export { getAllCheckList, getCheckListById, addCheckList }

@@ -4,9 +4,8 @@ import express from "express";
 // Initialize router
 const checkListRouter = express.Router();
 
-//Get methods
 checkListRouter.get('/', getAllCheckList)
-               .get('/:id', getCheckListById)
+               .get('/:textpath', getCheckListById)
                .post('/', addCheckList);
 
 export { checkListRouter }

@@ -2,6 +2,7 @@ import express from 'express';
 import pool from './db/pool'
 import 'dotenv/config';
 import { checkListRouter } from './routes/checklist';
+import { taskListRouter } from './routes/tasklist';
 
 
 const start = () => {
@@ -24,6 +25,7 @@ const start = () => {
 
     //Connecc routers to app
     app.use('/checklist', checkListRouter);
+    app.use('/tasklist', taskListRouter);
     
 }
 
